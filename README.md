@@ -18,5 +18,5 @@ In the current version the library is based on php_gmp.
 
 You can install this library via Composer:
 ```
-composer install simplito/bn-ecc
+composer require simplito/bn-php
 ```
