@@ -1,0 +1,22 @@
+{
+    "name": "simplito/bn-php",
+    "description": "Big number implementation compatible with bn.js",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sebastian Smyczyński",
+            "email": "s.smyczynski@simplito.com"
+        }
+    ],
+    "require": {
+        "ext-gmp": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "BN\\": "lib/"
+        }
+    }
+}
