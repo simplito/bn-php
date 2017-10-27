@@ -510,7 +510,7 @@ class BN implements JsonSerializable
     }
 
     public function divn($num) {
-        return $this->_clone()->idivn();
+        return $this->_clone()->idivn($num);
     }
 
     public function gcd(BN $num) {
