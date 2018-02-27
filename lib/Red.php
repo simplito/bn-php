@@ -3,6 +3,7 @@
 namespace BN;
 
 use \Exception;
+use \BI\BigInteger;
 
 class Red
 {
@@ -180,7 +181,7 @@ class Red
                 $b = $this->pow($c, (new BN(1))->iushln($m - $i - 1));
             } else {
                 $b = clone($c);
-                $b->gmp = gmp_powm($c->gmp, 1 << ($m - $i - 1), $this->m->gmp);
+                $b->bi = $c->bi->powMod(1 << ($m - $i - 1), $this->m->bi);
             }
 
             $r = $r->redMul($b);
@@ -199,7 +200,7 @@ class Red
 
     public function pow(BN $a, BN $num) {
         $r = clone($a);
-        $r->gmp = gmp_powm($a->gmp, $num->gmp, $this->m->gmp);
+        $r->bi = $a->bi->powMod($num->bi, $this->m->bi);
         return $r;        
     }
 

@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "ext-gmp": "*"
+        "simplito/bi-php": "~1.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "*"

@@ -9,11 +9,6 @@ This library provides a PHP Big Number API compatible with [bn.js](https://githu
 This software is licensed under the MIT License.
 
 
-## Implementation details
-
-In the current version the library is based on php_gmp.
-
-
 ## Installation
 
 You can install this library via Composer:
