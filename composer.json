@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "simplito/bi-php": "~1.0.0"
+        "simplito/bigint-wrapper-php": "~1.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "*"
