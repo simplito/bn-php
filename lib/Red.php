@@ -38,14 +38,14 @@ class Red
 
     public function verify1(BN $num)
     {        
-        assert('!$num->negative()'); //,"red works only with positives");
-        assert('$num->red'); //, "red works only with red numbers");
+        if (assert_options(ASSERT_ACTIVE)) assert(!$num->negative()); //,"red works only with positives");
+        assert($num->red); //, "red works only with red numbers");
     }
 
     public function verify2(BN $a, BN $b)
     {
-        assert('!$a->negative() && !$b->negative()'); //, "red works only with positives");
-        assert('$a->red && ($a->red == $b->red)'); //, "red works only with red numbers");
+        if (assert_options(ASSERT_ACTIVE)) assert(!$a->negative() && !$b->negative()); //, "red works only with positives");
+        assert($a->red && ($a->red == $b->red)); //, "red works only with red numbers");
     }
 
     public function imod(BN &$a) {
@@ -133,7 +133,7 @@ class Red
             return $a->_clone();
 
         $mod3 = $this->m->andln(3);
-        assert('$mod3 % 2 == 1');
+        assert($mod3 % 2 == 1);
 
         // Fast case
         if ($mod3 == 3) {
@@ -150,7 +150,7 @@ class Red
             $s++;
             $q->iushrn(1);
         }
-        assert('!$q->isZero()');
+        if (assert_options(ASSERT_ACTIVE)) assert(!$q->isZero());
 
         $one = (new BN(1))->toRed($this);
         $nOne = $one->redNeg();

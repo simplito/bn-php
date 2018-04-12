@@ -162,7 +162,7 @@ class BN implements JsonSerializable
     }
 
     public function ior(BN $num) {
-        assert('!$this->negative() && !num->negative()');
+        if (assert_options(ASSERT_ACTIVE)) assert(!$this->negative() && !$num->negative());
         return $this->iuor($num);
     }
 
@@ -186,7 +186,7 @@ class BN implements JsonSerializable
     }
 
     public function iand(BN $num) {
-        assert('!$this->negative() && !num->negative()');
+        if (assert_options(ASSERT_ACTIVE)) assert(!$this->negative() && !$num->negative());
         return $this->iuand($num);
     }
 
@@ -210,7 +210,7 @@ class BN implements JsonSerializable
     }
 
     public function ixor(BN $num) {
-        assert('!$this->negative() && !num->negative()');
+        if (assert_options(ASSERT_ACTIVE)) assert(!$this->negative() && !$num->negative());
         return $this->iuxor($num);
     }
 
@@ -230,7 +230,7 @@ class BN implements JsonSerializable
     // Not ``this`` with ``width`` bitwidth
     public function inotn($width)
     {
-        assert('is_integer($width) && $width >= 0');
+        assert(is_integer($width) && $width >= 0);
         $neg = false;
         if( $this->isNeg() )
         {
@@ -250,7 +250,7 @@ class BN implements JsonSerializable
 
     // Set `bit` of `this`
     public function setn($bit, $val) {
-        assert('is_integer($bit) && $bit > 0');
+        assert(is_integer($bit) && $bit > 0);
         $this->bi = $this->bi->setbit($bit, !!$val);
         return $this;
     }
@@ -290,7 +290,7 @@ class BN implements JsonSerializable
 
     public function imuln($num)
     {
-        assert('is_numeric($num)');
+        assert(is_numeric($num));
         $int = intval($num);
         $res = $this->bi->mul($int);
 
@@ -338,7 +338,7 @@ class BN implements JsonSerializable
 
     // Shift-left in-place
     public function iushln($bits) {
-        assert('is_integer($bits) && $bits >= 0');
+        assert(is_integer($bits) && $bits >= 0);
         if ($bits < 54) {
             $this->bi = $this->bi->mul(1 << $bits);
         } else {
@@ -348,7 +348,7 @@ class BN implements JsonSerializable
     }
 
     public function ishln($bits) {
-        assert('!$this->negate()');
+        if (assert_options(ASSERT_ACTIVE)) assert(!$this->negative());
         return $this->iushln($bits);
     }
 
@@ -359,7 +359,7 @@ class BN implements JsonSerializable
         if( $hint != 0 )
             throw new Exception("Not implemented");
 
-        assert('is_integer($bits) && $bits >= 0');
+        assert(is_integer($bits) && $bits >= 0);
 
         if( $extended != null )
             $extended = $this->maskn($bits);
@@ -373,7 +373,7 @@ class BN implements JsonSerializable
     }
 
     public function ishrn($bits, $hint = null, $extended = null) {
-        assert('!$this->negative()');
+        if (assert_options(ASSERT_ACTIVE)) assert(!$this->negative());
         return $this->iushrn($bits, $hint, $extended);
     }
 
@@ -397,14 +397,14 @@ class BN implements JsonSerializable
 
     // Test if n bit is set
     public function testn($bit) {
-        assert('is_integer($bit) && $bit >= 0');
+        assert(is_integer($bit) && $bit >= 0);
         return $this->bi->testbit($bit);
     }
 
     // Return only lowers bits of number (in-place)
     public function imaskn($bits) {
-        assert('is_integer($bits) && $bits >= 0');
-        assert('!$this->negative()');
+        assert(is_integer($bits) && $bits >= 0);
+        if (assert_options(ASSERT_ACTIVE)) assert(!$this->negative());
         $mask = "";
         for($i = 0; $i < $bits; $i++)
             $mask .= "1";
@@ -418,14 +418,14 @@ class BN implements JsonSerializable
 
     // Add plain number `num` to `this`
     public function iaddn($num) {
-        assert('is_numeric($num)');
+        assert(is_numeric($num));
         $this->bi = $this->bi->add(intval($num));
         return $this;
     }
 
     // Subtract plain number `num` from `this`
     public function isubn($num) {
-        assert('is_numeric($num)');
+        assert(is_numeric($num));
         $this->bi = $this->bi->sub(intval($num));
         return $this;
     }
@@ -454,7 +454,7 @@ class BN implements JsonSerializable
 
     // Find `this` / `num`
     public function div(BN $num) {
-        assert('!$num->isZero()');
+        if (assert_options(ASSERT_ACTIVE)) assert(!$num->isZero());
         $res = clone($this);
         $res->bi = $res->bi->div($num->bi);
         return $res;
@@ -462,14 +462,14 @@ class BN implements JsonSerializable
 
     // Find `this` % `num`
     public function mod(BN $num) {
-        assert('!$num->isZero()');
+        if (assert_options(ASSERT_ACTIVE)) assert(!$num->isZero());
         $res = clone($this);
         $res->bi = $res->bi->divR($num->bi);
         return $res;
     }
 
     public function umod(BN $num) {
-        assert('!$num->isZero()');
+        if (assert_options(ASSERT_ACTIVE)) assert(!$num->isZero());
         $tmp = $num->bi->sign() < 0 ? $num->bi->abs() : $num->bi;        
         $res = clone($this);
         $res->bi = $this->bi->mod($tmp);
@@ -479,7 +479,7 @@ class BN implements JsonSerializable
     // Find Round(`this` / `num`)
     public function divRound(BN $num)
     {
-        assert('!$num->isZero()');
+        if (assert_options(ASSERT_ACTIVE)) assert(!$num->isZero());
 
         $negative = $this->negative() !== $num->negative();
 
@@ -493,13 +493,13 @@ class BN implements JsonSerializable
     }
 
     public function modn($num) {
-        assert('is_numeric($num) && $num != 0');
+        assert(is_numeric($num) && $num != 0);
         return $this->bi->divR(intval($num))->toNumber();
     }
 
     // In-place division by number
     public function idivn($num) {
-        assert('is_numeric($num) && $num != 0');
+        assert(is_numeric($num) && $num != 0);
         $this->bi = $this->bi->div(intval($num));
         return $this;
     }
@@ -529,7 +529,7 @@ class BN implements JsonSerializable
     }
 
     public function andln($num) {
-        assert('is_numeric($num)');
+        assert(is_numeric($num));
         return $this->bi->binaryAnd($num)->toNumber();
     }
 
@@ -543,7 +543,7 @@ class BN implements JsonSerializable
     }
 
     public function cmpn($num) {
-        assert('is_numeric($num)');
+        assert(is_numeric($num));
         return $this->bi->cmp($num);
     }
 
