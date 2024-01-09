@@ -38,13 +38,13 @@ class Red
 
     public function verify1(BN $num)
     {        
-        if (assert_options(ASSERT_ACTIVE)) assert(!$num->negative()); //,"red works only with positives");
+        if (PHP_VERSION_ID < 80300 && assert_options(ASSERT_ACTIVE)) assert(!$num->negative()); //,"red works only with positives");
         assert($num->red); //, "red works only with red numbers");
     }
 
     public function verify2(BN $a, BN $b)
     {
-        if (assert_options(ASSERT_ACTIVE)) assert(!$a->negative() && !$b->negative()); //, "red works only with positives");
+        if (PHP_VERSION_ID < 80300 && assert_options(ASSERT_ACTIVE)) assert(!$a->negative() && !$b->negative()); //, "red works only with positives");
         assert($a->red && ($a->red == $b->red)); //, "red works only with red numbers");
     }
 
@@ -150,7 +150,7 @@ class Red
             $s++;
             $q->iushrn(1);
         }
-        if (assert_options(ASSERT_ACTIVE)) assert(!$q->isZero());
+        if (PHP_VERSION_ID < 80300 && assert_options(ASSERT_ACTIVE)) assert(!$q->isZero());
 
         $one = (new BN(1))->toRed($this);
         $nOne = $one->redNeg();
