@@ -7,6 +7,7 @@ use \BI\BigInteger;
 
 class BN implements JsonSerializable
 {
+    public static $ASSERT_ENABLED;
     public $bi;
     public $red;
 
@@ -163,7 +164,7 @@ class BN implements JsonSerializable
     }
 
     public function ior(BN $num) {
-        if (assert_options(ASSERT_ACTIVE)) assert(!$this->negative() && !$num->negative());
+        if (BN::$ASSERT_ENABLED) assert(!$this->negative() && !$num->negative());
         return $this->iuor($num);
     }
 
@@ -187,7 +188,7 @@ class BN implements JsonSerializable
     }
 
     public function iand(BN $num) {
-        if (assert_options(ASSERT_ACTIVE)) assert(!$this->negative() && !$num->negative());
+        if (BN::$ASSERT_ENABLED) assert(!$this->negative() && !$num->negative());
         return $this->iuand($num);
     }
 
@@ -211,7 +212,7 @@ class BN implements JsonSerializable
     }
 
     public function ixor(BN $num) {
-        if (assert_options(ASSERT_ACTIVE)) assert(!$this->negative() && !$num->negative());
+        if (BN::$ASSERT_ENABLED) assert(!$this->negative() && !$num->negative());
         return $this->iuxor($num);
     }
 
@@ -349,7 +350,7 @@ class BN implements JsonSerializable
     }
 
     public function ishln($bits) {
-        if (assert_options(ASSERT_ACTIVE)) assert(!$this->negative());
+        if (BN::$ASSERT_ENABLED) assert(!$this->negative());
         return $this->iushln($bits);
     }
 
@@ -374,7 +375,7 @@ class BN implements JsonSerializable
     }
 
     public function ishrn($bits, $hint = null, $extended = null) {
-        if (assert_options(ASSERT_ACTIVE)) assert(!$this->negative());
+        if (BN::$ASSERT_ENABLED) assert(!$this->negative());
         return $this->iushrn($bits, $hint, $extended);
     }
 
@@ -405,7 +406,7 @@ class BN implements JsonSerializable
     // Return only lowers bits of number (in-place)
     public function imaskn($bits) {
         assert(is_integer($bits) && $bits >= 0);
-        if (assert_options(ASSERT_ACTIVE)) assert(!$this->negative());
+        if (BN::$ASSERT_ENABLED) assert(!$this->negative());
         $mask = "";
         for($i = 0; $i < $bits; $i++)
             $mask .= "1";
@@ -455,7 +456,7 @@ class BN implements JsonSerializable
 
     // Find `this` / `num`
     public function div(BN $num) {
-        if (assert_options(ASSERT_ACTIVE)) assert(!$num->isZero());
+        if (BN::$ASSERT_ENABLED) assert(!$num->isZero());
         $res = clone($this);
         $res->bi = $res->bi->div($num->bi);
         return $res;
@@ -463,15 +464,15 @@ class BN implements JsonSerializable
 
     // Find `this` % `num`
     public function mod(BN $num) {
-        if (assert_options(ASSERT_ACTIVE)) assert(!$num->isZero());
+        if (BN::$ASSERT_ENABLED) assert(!$num->isZero());
         $res = clone($this);
         $res->bi = $res->bi->divR($num->bi);
         return $res;
     }
 
     public function umod(BN $num) {
-        if (assert_options(ASSERT_ACTIVE)) assert(!$num->isZero());
-        $tmp = $num->bi->sign() < 0 ? $num->bi->abs() : $num->bi;        
+        if (BN::$ASSERT_ENABLED) assert(!$num->isZero());
+        $tmp = $num->bi->sign() < 0 ? $num->bi->abs() : $num->bi;
         $res = clone($this);
         $res->bi = $this->bi->mod($tmp);
         return $res;
@@ -480,7 +481,7 @@ class BN implements JsonSerializable
     // Find Round(`this` / `num`)
     public function divRound(BN $num)
     {
-        if (assert_options(ASSERT_ACTIVE)) assert(!$num->isZero());
+        if (BN::$ASSERT_ENABLED) assert(!$num->isZero());
 
         $negative = $this->negative() !== $num->negative();
 
@@ -681,7 +682,7 @@ class BN implements JsonSerializable
             throw new Exception("redMul works only with red numbers");
         $res = clone($this);
         $res->bi = $this->bi->mul($num->bi)->mod($this->red->m->bi);
-        return $res;            
+        return $res;
         /*
         return $this->red->mul($this, $num);
         */
@@ -764,3 +765,4 @@ class BN implements JsonSerializable
         }
     }
 }
+BN::$ASSERT_ENABLED = ini_get("zend.assertions") === "1";
